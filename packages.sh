@@ -94,6 +94,62 @@ else
   curl https://cursor.com/install -fsS | bash
 fi
 
+if pacman -Q php-sqlite php-pgsql >/dev/null 2>&1; then
+  echo "php-sqlite and php-pgsql already installed"
+else
+  echo "installing php-sqlite and php-pgsql..."
+  omarchy-pkg-add php-sqlite php-pgsql
+fi
+
+if pacman -Q php-pcov >/dev/null 2>&1; then
+  echo "php-pcov already installed"
+else
+  echo "installing php-pcov for code coverage..."
+  yay -S --needed --noconfirm --mflags=--ignorearch php-pcov
+fi
+
+for ini in "$DOTFILES"/etc/php/conf.d/*.ini; do
+  name="$(basename "$ini" .ini)"
+
+  if cmp -s "$ini" "/etc/php/conf.d/$name.ini"; then
+    echo "php $name.ini already up to date"
+  else
+    echo "writing php $name.ini..."
+    sudo install -D -m 0644 "$ini" "/etc/php/conf.d/$name.ini"
+  fi
+done
+
+if pacman -Q postgresql >/dev/null 2>&1; then
+  echo "postgres already installed"
+else
+  echo "installing postgres..."
+  omarchy-pkg-add postgresql
+fi
+
+if sudo test -f /var/lib/postgres/data/PG_VERSION; then
+  echo "postgres already initialised"
+else
+  echo "initialising postgres..."
+  sudo -iu postgres initdb --locale=C.UTF-8 --encoding=UTF8 -D /var/lib/postgres/data
+fi
+
+if systemctl is-enabled postgresql.service >/dev/null 2>&1 && systemctl is-active postgresql.service >/dev/null 2>&1; then
+  echo "postgres already enabled"
+else
+  echo "enabling postgres..."
+  sudo systemctl enable --now postgresql.service
+fi
+
+echo "setting up the postgres root user and database..."
+sudo -iu postgres psql -q -v ON_ERROR_STOP=1 -d postgres <"$DOTFILES/etc/postgres/setup.sql"
+
+if pacman -Q tableplus >/dev/null 2>&1; then
+  echo "tableplus already installed"
+else
+  echo "installing tableplus..."
+  omarchy-pkg-aur-add tableplus || echo "skipping tableplus: the aur build failed, usually because the package lags a tableplus release"
+fi
+
 if [ -x "$HOME/.config/composer/vendor/bin/pint" ]; then
   echo "pint already installed globally"
 else
