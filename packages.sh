@@ -61,6 +61,39 @@ else
   sudo systemctl enable --now logid.service
 fi
 
+echo "installing the mise tools..."
+mise install
+
+if claude plugins marketplace list 2>/dev/null | grep -F claude-plugins-official >/dev/null; then
+  echo "claude plugin marketplace already added"
+else
+  echo "adding the claude plugin marketplace..."
+  claude plugins marketplace add anthropics/claude-plugins-official
+fi
+
+for plugin in $(jq -r '.enabledPlugins | keys[]' "$DOTFILES/home/.claude/settings.json"); do
+  if claude plugins list 2>/dev/null | grep -F "$plugin" >/dev/null; then
+    echo "claude plugin $plugin already installed"
+  else
+    echo "installing claude plugin $plugin..."
+    claude plugins install "$plugin"
+  fi
+done
+
+if [ -d "$HOME/.agents/skills/setup-matt-pocock-skills" ]; then
+  echo "matt pocock skills already installed for cursor and codex"
+else
+  echo "installing matt pocock skills for cursor and codex..."
+  npx -y skills@latest add mattpocock/skills -g -a cursor -a codex --skill '*' -y
+fi
+
+if command -v cursor-agent >/dev/null 2>&1; then
+  echo "cursor cli already installed"
+else
+  echo "installing cursor cli..."
+  curl https://cursor.com/install -fsS | bash
+fi
+
 if [ -x "$HOME/.config/composer/vendor/bin/pint" ]; then
   echo "pint already installed globally"
 else
