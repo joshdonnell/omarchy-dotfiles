@@ -2,6 +2,7 @@ hl.config({
   input = {
     touchpad = {
       natural_scroll = false,
+      scroll_factor = 0.25,
     },
   },
   gestures = {
