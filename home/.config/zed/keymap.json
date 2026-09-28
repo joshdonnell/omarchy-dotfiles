@@ -1139,13 +1139,26 @@
       "super-t": "terminal_panel::Toggle",
       "super-r": "outline::Toggle",
       "super-shift-r": "project_symbols::Toggle",
-      "super-i": "agent::ToggleFocus"
+      "super-i": "multi_workspace::ToggleWorkspaceSidebar"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "super-k super-d": "debug_panel::ToggleFocus",
+      "super-k super-b": "workspace::ToggleRightDock",
+      "super-i": "multi_workspace::ToggleWorkspaceSidebar"
+    }
+  },
+  {
+    "context": "AcpThread || Terminal",
+    "bindings": {
+      "super-i": "multi_workspace::ToggleWorkspaceSidebar"
     }
   },
   {
     "context": "Editor && mode == full",
     "bindings": {
-      "super-i": "agent::ToggleFocus",
       "super-{": "editor::Fold",
       "super-}": "editor::UnfoldLines",
       "super-l": "editor::DuplicateLineDown",

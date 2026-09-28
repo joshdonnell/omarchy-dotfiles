@@ -34,47 +34,30 @@ local function active_window_is_terminal()
   return false
 end
 
-local function active_window_is_zed()
-  local window = hl.get_active_window()
+local function is_zed(window)
   return window ~= nil and (window.class or ""):find("^dev%.zed%.Zed") ~= nil
 end
 
-local key_names = {
-  BRACKETLEFT = "bracketleft",
-  BRACKETRIGHT = "bracketright",
-  MINUS = "minus",
-  EQUAL = "equal",
-  SLASH = "slash",
-  comma = "comma",
-  LEFT = "Left",
-  RIGHT = "Right",
-  UP = "Up",
-  DOWN = "Down",
-  BACKSPACE = "BackSpace",
-  ["code:19"] = "0",
-}
+-- Super binds are disabled while Zed is focused, so zed/keymap.json can use Zed's macOS bindings with Super as Cmd.
+-- Replaying them with send_key_state would not work: it leaves Zed thinking Super is released,
+-- so the second key of a chord like Super+K Super+E arrives without Super.
+local zed_passthrough = {}
 
-local function pressed_chord(keys)
-  local parts = {}
-  for part in keys:gmatch("[^%s+]+") do
-    table.insert(parts, part)
+local function bind(keys, description, dispatcher)
+  hl.unbind(keys)
+  if type(dispatcher) == "string" then
+    dispatcher = hl.dsp.exec_cmd(dispatcher)
   end
 
-  local key = table.remove(parts)
-  return { table.concat(parts, " "), key_names[key] or key }
+  local keybind = hl.bind(keys, dispatcher, { description = description })
+  if keys:find("SUPER", 1, true) then
+    table.insert(zed_passthrough, keybind)
+  end
 end
 
--- Zed gets every Super shortcut untouched, so zed/keymap.json can use Zed's macOS bindings with Super as Cmd.
 local function mac_shortcut(keys, description, app_chords, terminal_chords)
-  hl.unbind(keys)
-  o.bind(keys, description, function()
-    if active_window_is_terminal() then
-      send_chords(terminal_chords)
-    elseif keys:find("SUPER", 1, true) and active_window_is_zed() then
-      send_chords({ pressed_chord(keys) })
-    else
-      send_chords(app_chords)
-    end
+  bind(keys, description, function()
+    send_chords(active_window_is_terminal() and terminal_chords or app_chords)
   end)
 end
 
@@ -82,18 +65,7 @@ local function same_everywhere(keys, description, chords)
   mac_shortcut(keys, description, chords, chords)
 end
 
-local function zed_or(keys, description, fallback)
-  hl.unbind(keys)
-  o.bind(keys, description, function()
-    if active_window_is_zed() then
-      send_chords({ pressed_chord(keys) })
-    elseif type(fallback) == "string" then
-      hl.exec_cmd(fallback)
-    else
-      hl.dispatch(fallback)
-    end
-  end)
-end
+local zed_or = bind
 
 local command_letters = {
   { "B", "Bold" },
@@ -132,12 +104,9 @@ zed_or("SUPER + ALT + RIGHT", "Move window to group on right, or next tab in Zed
 zed_or("SUPER + ALT + UP", "Move window to group on top, or add cursor above in Zed", hl.dsp.window.move({ into_group = "u" }))
 zed_or("SUPER + ALT + DOWN", "Move window to group on bottom, or add cursor below in Zed", hl.dsp.window.move({ into_group = "d" }))
 
-hl.unbind("SUPER + T")
-o.bind("SUPER + T", "Mac New tab, or new terminal in a terminal", function()
+bind("SUPER + T", "Mac New tab, or new terminal in a terminal", function()
   if active_window_is_terminal() then
     hl.exec_cmd("omarchy-launch-terminal")
-  elseif active_window_is_zed() then
-    send_chords({ { "SUPER", "T" } })
   else
     send_chords({ { "CTRL", "T" } })
   end
@@ -178,3 +147,16 @@ same_everywhere("ALT + SHIFT + LEFT", "Mac Select word left", { { "CTRL SHIFT", 
 same_everywhere("ALT + SHIFT + RIGHT", "Mac Select word right", { { "CTRL SHIFT", "Right" } })
 mac_shortcut("ALT + BACKSPACE", "Mac Delete word left", { { "CTRL", "BackSpace" } }, { { "CTRL", "W" } })
 mac_shortcut("ALT + DELETE", "Mac Delete word right", { { "CTRL", "Delete" } }, { { "ALT", "D" } })
+
+local function sync_zed_passthrough(window)
+  local enabled = not is_zed(window)
+  for _, keybind in ipairs(zed_passthrough) do
+    keybind:set_enabled(enabled)
+  end
+end
+
+hl.on("window.active", sync_zed_passthrough)
+hl.on("window.class", function()
+  sync_zed_passthrough(hl.get_active_window())
+end)
+sync_zed_passthrough(hl.get_active_window())
