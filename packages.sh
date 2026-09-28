@@ -61,10 +61,17 @@ else
   sudo systemctl enable --now logid.service
 fi
 
+if [ -x "$HOME/.config/composer/vendor/bin/pint" ]; then
+  echo "pint already installed globally"
+else
+  echo "installing pint globally for php-format..."
+  composer global require laravel/pint
+fi
+
 FONT="Dank Mono"
 FONT_DIR="$HOME/.local/share/fonts/DankMono"
 
-if fc-list : family | grep -Fq "$FONT"; then
+if fc-list : family | grep -F "$FONT" >/dev/null; then
   echo "$FONT already installed"
 elif compgen -G "$DOTFILES/fonts/*.[ot]tf" >/dev/null; then
   echo "installing $FONT..."
@@ -75,7 +82,7 @@ else
   echo "skipping $FONT: put its .otf or .ttf files in $DOTFILES/fonts/ and run ./install.sh again"
 fi
 
-if fc-list : family | grep -Fq "$FONT"; then
+if fc-list : family | grep -F "$FONT" >/dev/null; then
   if [ "$(omarchy font current)" = "$FONT" ]; then
     echo "$FONT already the system monospace font"
   else

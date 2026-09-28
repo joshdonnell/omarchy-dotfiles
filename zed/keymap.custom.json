@@ -1,0 +1,65 @@
+// Your own Zed bindings, written as on a Mac with super- for Cmd.
+// Run ./zed/build-keymap.py after editing, which writes home/.config/zed/keymap.json.
+// Super + Enter stays Omarchy's terminal and Super + 1-9 stay workspaces, so Zed never sees them.
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      "super-k super-e": "project_panel::ToggleFocus",
+      "super-k super-g": "git_panel::ToggleFocus",
+      "super-k super-d": "debug_panel::ToggleFocus",
+      "super-k super-x": "zed::Extensions",
+      "super-b": "workspace::ToggleRightDock",
+      "super-k super-b": "workspace::ToggleRightDock",
+      "super-e": "workspace::FocusCenterPane",
+      "super-t": "terminal_panel::Toggle",
+      "super-r": "outline::Toggle",
+      "super-shift-r": "project_symbols::Toggle",
+      "super-i": "agent::ToggleFocus"
+    }
+  },
+  {
+    "context": "Editor && mode == full",
+    "bindings": {
+      "super-i": "agent::ToggleFocus",
+
+      "super-{": "editor::Fold",
+      "super-}": "editor::UnfoldLines",
+
+      "super-l": "editor::DuplicateLineDown",
+      "super-j": "editor::JoinLines",
+
+      "super-k enter": "editor::GoToDeclaration",
+      "super-k super-i": "editor::ToggleCodeActions",
+
+      "super-m super-i": "editor::SelectSmallerSyntaxNode",
+      "super-m super-o": "editor::SelectLargerSyntaxNode",
+      "super-m super-e": "editor::SelectLargerSyntaxNode",
+      "super-m super-m": "editor::MoveToEnclosingBracket",
+
+      "ctrl-w": "pane::JoinAll",
+      "ctrl-n": "pane::SplitRight",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-=": "vim::ResizePaneRight",
+      "ctrl--": "vim::ResizePaneLeft"
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-n": "pane::SplitRight",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-w": "pane::CloseActiveItem"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "super-d": "project_panel::Duplicate",
+      "super-n": "project_panel::NewFile",
+      "super-shift-n": "project_panel::NewDirectory"
+    }
+  }
+]

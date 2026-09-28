@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Zed pipes the buffer on stdin and reads the formatted buffer on stdout.
+# Projects set up for Prettier get Prettier; everything else gets oxfmt.
+
+FILE="$1"
+
+find_project_root() {
+  local dir="$1"
+  while [ "$dir" != "/" ]; do
+    if [ -f "$dir/package.json" ]; then
+      echo "$dir"
+      return
+    fi
+    dir="$(dirname "$dir")"
+  done
+}
+
+has_any() {
+  local root="$1"
+  shift
+  for name in "$@"; do
+    [ -e "$root/$name" ] && return 0
+  done
+  return 1
+}
+
+depends_on() {
+  jq -e --arg name "$2" '(.dependencies // {}) + (.devDependencies // {}) | has($name)' "$1/package.json" >/dev/null 2>&1
+}
+
+uses_oxfmt() {
+  has_any "$1" .oxfmtrc.json .oxfmtrc.jsonc oxfmt.config.ts oxfmt.config.mts || depends_on "$1" oxfmt
+}
+
+uses_prettier() {
+  has_any "$1" .prettierrc .prettierrc.json .prettierrc.json5 .prettierrc.yaml .prettierrc.yml .prettierrc.toml \
+    .prettierrc.js .prettierrc.cjs .prettierrc.mjs .prettierrc.ts prettier.config.js prettier.config.cjs \
+    prettier.config.mjs prettier.config.ts ||
+    jq -e 'has("prettier")' "$1/package.json" >/dev/null 2>&1 ||
+    depends_on "$1" prettier
+}
+
+ROOT=$(find_project_root "$(dirname "$FILE")")
+TOOL=oxfmt
+
+if [ -n "$ROOT" ]; then
+  cd "$ROOT" || exit 1
+  if ! uses_oxfmt "$ROOT" && uses_prettier "$ROOT"; then
+    TOOL=prettier
+  fi
+fi
+
+if [ -n "$ROOT" ] && [ -x "node_modules/.bin/$TOOL" ]; then
+  exec "node_modules/.bin/$TOOL" --stdin-filepath "$FILE"
+fi
+
+exec "$TOOL" --stdin-filepath "$FILE"

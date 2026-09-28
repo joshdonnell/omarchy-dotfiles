@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Zed pipes the buffer on stdin and reads the formatted buffer on stdout; Pint and PHP CS Fixer only fix files in place.
+
+FILE="$1"
+GLOBAL_PINT="$HOME/.config/composer/vendor/bin/pint"
+
+find_project_root() {
+  local dir="$1"
+  while [ "$dir" != "/" ]; do
+    if [ -f "$dir/composer.json" ]; then
+      echo "$dir"
+      return
+    fi
+    dir="$(dirname "$dir")"
+  done
+}
+
+PROJECT_ROOT=$(find_project_root "$(dirname "$FILE")")
+
+TEMP=$(mktemp /tmp/php-format.XXXXXX.php)
+trap 'rm -f "$TEMP"' EXIT
+cat >"$TEMP"
+
+if [ -n "$PROJECT_ROOT" ]; then
+  cd "$PROJECT_ROOT" || exit 1
+fi
+
+if [ -n "$PROJECT_ROOT" ] && [ -x vendor/bin/pint ]; then
+  vendor/bin/pint "$TEMP" >/dev/null 2>&1
+elif [ -n "$PROJECT_ROOT" ] && [ -x vendor/bin/php-cs-fixer ]; then
+  vendor/bin/php-cs-fixer fix --allow-risky=yes "$TEMP" >/dev/null 2>&1
+elif [ -x "$GLOBAL_PINT" ]; then
+  "$GLOBAL_PINT" "$TEMP" >/dev/null 2>&1
+fi
+
+cat "$TEMP"

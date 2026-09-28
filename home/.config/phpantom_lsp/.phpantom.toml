@@ -1,0 +1,4 @@
+#:schema https://raw.githubusercontent.com/PHPantom-dev/phpantom_lsp/main/config-schema.json
+
+[phpstan]
+memory-limit = "2G"
