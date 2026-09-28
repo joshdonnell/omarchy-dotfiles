@@ -150,6 +150,20 @@ else
   omarchy-pkg-aur-add tableplus || echo "skipping tableplus: the aur build failed, usually because the package lags a tableplus release"
 fi
 
+if pacman -Q mailpit >/dev/null 2>&1; then
+  echo "mailpit already installed"
+else
+  echo "installing mailpit..."
+  omarchy-pkg-add mailpit
+fi
+
+if systemctl is-enabled mailpit.service >/dev/null 2>&1 && systemctl is-active mailpit.service >/dev/null 2>&1; then
+  echo "mailpit already enabled"
+else
+  echo "enabling mailpit..."
+  sudo systemctl enable --now mailpit.service
+fi
+
 if [ -x "$HOME/.config/composer/vendor/bin/pint" ]; then
   echo "pint already installed globally"
 else

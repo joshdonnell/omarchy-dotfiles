@@ -15,6 +15,10 @@ Don't overuse emoji.
 
 Never use em dashes (—) or en dashes (–) as punctuation. Rephrase with periods, commas, or parentheses. Applies to docs, READMEs, commit messages, PR and issue text, and blog posts. Hyphens in compound words are fine.
 
+## Git
+
+Never commit. Leave changes uncommitted, I handle commits myself.
+
 ## GitHub
 
 Use the gh CLI for GitHub questions and operations.
