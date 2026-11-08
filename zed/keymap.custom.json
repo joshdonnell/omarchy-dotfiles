@@ -14,41 +14,23 @@
       "super-e": "workspace::FocusCenterPane",
       "super-t": "terminal_panel::Toggle",
       "super-r": "outline::Toggle",
-      "super-shift-r": "project_symbols::Toggle",
-      "super-i": "multi_workspace::ToggleWorkspaceSidebar"
-    }
-  },
-  {
-    "context": "Editor",
-    "bindings": {
-      "super-k super-d": "debug_panel::ToggleFocus",
-      "super-k super-b": "workspace::ToggleRightDock",
-      "super-i": "multi_workspace::ToggleWorkspaceSidebar"
-    }
-  },
-  {
-    "context": "AcpThread || Terminal",
-    "bindings": {
-      "super-i": "multi_workspace::ToggleWorkspaceSidebar"
+      "super-i": "agent::ToggleFocus"
     }
   },
   {
     "context": "Editor && mode == full",
     "bindings": {
+      "super-i": "agent::ToggleFocus",
       "super-{": "editor::Fold",
       "super-}": "editor::UnfoldLines",
-
       "super-l": "editor::DuplicateLineDown",
       "super-j": "editor::JoinLines",
-
       "super-k enter": "editor::GoToDeclaration",
       "super-k super-i": "editor::ToggleCodeActions",
-
       "super-m super-i": "editor::SelectSmallerSyntaxNode",
       "super-m super-o": "editor::SelectLargerSyntaxNode",
       "super-m super-e": "editor::SelectLargerSyntaxNode",
       "super-m super-m": "editor::MoveToEnclosingBracket",
-
       "ctrl-w": "pane::JoinAll",
       "ctrl-n": "pane::SplitRight",
       "ctrl-l": "workspace::ActivatePaneRight",
@@ -72,6 +54,24 @@
       "super-d": "project_panel::Duplicate",
       "super-n": "project_panel::NewFile",
       "super-shift-n": "project_panel::NewDirectory"
+    }
+  },
+  {
+    "context": "AgentPanel",
+    "bindings": {
+      "super-i": "workspace::CloseActiveDock"
+    }
+  },
+  {
+    "context": "AcpThread",
+    "bindings": {
+      "super-i": "workspace::CloseActiveDock"
+    }
+  },
+  {
+    "context": "AcpThread > Editor",
+    "bindings": {
+      "super-i": "workspace::CloseActiveDock"
     }
   }
 ]

@@ -1,4 +1,5 @@
 {
+  "document_folding_ranges": "on",
   "cli_default_open_behavior": "existing_window",
   "agent_servers": {
     "cursor": {
@@ -9,8 +10,7 @@
     }
   },
   "base_keymap": "VSCode",
-  "theme": "Catppuccin Frappé",
-  "icon_theme": "Catppuccin Frappé",
+  "theme": "Omazed",
   "auto_install_extensions": {
     "catppuccin": true,
     "catppuccin-icons": true,
@@ -20,15 +20,10 @@
     "oxc": true,
     "vue": true
   },
-  "buffer_font_family": "Dank Mono",
+  "buffer_font_family": "JetBrainsMono Nerd Font",
   "buffer_font_size": 14,
-  "ui_font_family": "Dank Mono",
   "terminal": {
-    "font_family": "Dank Mono",
     "font_size": 14,
-    "font_fallbacks": [
-      "JetBrainsMono Nerd Font"
-    ],
     "button": false
   },
   "confirm_quit": true,
@@ -53,7 +48,7 @@
   "current_line_highlight": "none",
   "selection_highlight": false,
   "lsp_document_colors": "none",
-  "inline_code_actions": false,
+  "inline_code_actions": true,
   "scrollbar": {
     "cursors": false,
     "git_diff": false,
@@ -88,6 +83,9 @@
     "button": false
   },
   "agent": {
+    "threads_sidebar": {
+      "position": "right"
+    },
     "button": false
   },
   "debugger": {
@@ -105,120 +103,91 @@
   },
   "languages": {
     "PHP": {
-      "language_servers": [
-        "phpantom",
-        "laravel",
-        "!intelephense",
-        "!phpactor",
-        "!phptools",
-        "..."
-      ],
+      "language_servers": ["phpantom", "laravel", "!intelephense", "!phpactor", "!phptools", "..."],
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/php-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "php-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     },
     "CSS": {
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/js-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "js-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     },
     "HTML": {
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/js-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "js-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     },
     "JavaScript": {
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/js-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "js-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     },
     "JSON": {
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/js-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "js-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     },
     "JSONC": {
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/js-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "js-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     },
     "Markdown": {
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/js-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "js-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     },
     "TypeScript": {
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/js-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "js-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     },
     "TSX": {
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/js-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "js-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     },
     "Vue.js": {
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/js-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "js-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     },
     "YAML": {
       "formatter": {
         "external": {
-          "command": "/home/josh/.local/bin/js-format",
-          "arguments": [
-            "{buffer_path}"
-          ]
+          "command": "js-format",
+          "arguments": ["{buffer_path}"]
         }
       }
     }

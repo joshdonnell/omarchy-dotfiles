@@ -12,9 +12,6 @@ fi
 
 "$DOTFILES/install.sh"
 
-echo "updating the skills for cursor and codex..."
-npx -y skills@latest update -g -y
-
 omarchy update
 
 echo

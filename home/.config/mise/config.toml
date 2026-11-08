@@ -1,7 +1,0 @@
-[tools]
-claude = "latest"
-codex = "latest"
-node = "latest"
-pnpm = "latest"
-"npm:oxfmt" = "latest"
-"npm:prettier" = "latest"

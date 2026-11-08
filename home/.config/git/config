@@ -6,9 +6,9 @@
 	ci = commit
 	st = status
 [init]
-	defaultBranch = main
+	defaultBranch = master
 [pull]
-	rebase = true
+	rebase = true 			 # Rebase (instead of merge) on pull
 [push]
 	autoSetupRemote = true   # Automatically set upstream branch on push
 [diff]
