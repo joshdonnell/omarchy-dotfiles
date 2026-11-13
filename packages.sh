@@ -51,21 +51,6 @@ else
   (cd "$OMARCHY_PATH/default/input-methods" && python3 -c 'import typing_setup; typing_setup.save_keyboard(["gb:mac"])')
 fi
 
-if command -v cargo >/dev/null 2>&1; then
-  echo "rust already installed"
-else
-  echo "installing rust to build herdr-ade..."
-  omarchy-install-dev-env rust
-fi
-
-if herdr plugin list 2>/dev/null | grep -F shire-studio.ade >/dev/null; then
-  echo "herdr-ade already installed"
-else
-  # The sidebar, changes, git, workspace and file keys in home/.config/herdr/config.toml.
-  echo "installing herdr-ade..."
-  herdr plugin install shire-studio/herdr-ade --yes
-fi
-
 if [ -f "$HOME/.claude/hooks/herdr-agent-state.sh" ]; then
   echo "herdr claude hook already installed"
 else
