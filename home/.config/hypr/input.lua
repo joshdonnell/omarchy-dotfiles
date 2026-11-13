@@ -57,6 +57,6 @@
 -- hl.gesture({ fingers = 3, direction = "left", action = function() hl.dispatch(hl.dsp.focus({ direction = "l" })) end })
 -- hl.gesture({ fingers = 3, direction = "right", action = function() hl.dispatch(hl.dsp.focus({ direction = "r" })) end })
 
--- The MacBook trackpad moves the pointer faster here than on macOS, so slow just
--- the built-in trackpad (-1 to 1, default 0). External mice keep the default.
-hl.device({ name = "apple-spi-trackpad", sensitivity = -0.5 })
+-- Two-finger scrolling on the MacBook trackpad felt faster than on macOS
+-- (Omarchy's default is 0.4). Terminals keep their own scroll speeds on top.
+hl.config({ input = { touchpad = { scroll_factor = 0.25 } } })
