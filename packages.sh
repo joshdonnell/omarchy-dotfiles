@@ -4,19 +4,11 @@ set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if pacman -Q helium-browser-bin >/dev/null 2>&1; then
-  echo "helium already installed"
+if [ "$(omarchy-default-browser)" = "chromium" ]; then
+  echo "chromium already the default browser"
 else
-  echo "installing helium..."
-  omarchy-pkg-aur-add helium-browser-bin
-fi
-
-if [ "$(env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings get default-web-browser)" = "helium.desktop" ]; then
-  echo "helium already the default browser"
-else
-  echo "setting helium as the default browser..."
-  # Same call omarchy-default-browser makes; it has no helium option.
-  env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings set default-web-browser helium.desktop
+  echo "setting chromium as the default browser..."
+  omarchy-default-browser chromium
 fi
 
 if pacman -Q zed omazed >/dev/null 2>&1; then
